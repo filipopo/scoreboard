@@ -1,0 +1,33 @@
+{
+  "enter": [
+    "Unesi",
+    "Daj mi",
+    "Davai",
+    "Gurni"
+  ],
+  "player": [
+    "brat",
+    "učesnik",
+    "brat moj"
+  ],
+  "team": [
+    "tim",
+    "braća moja",
+    "grupa"
+  ],
+  "score": [
+    "poen",
+    "zlato"
+  ],
+  "teamVictory": [
+    "Lavovi"
+  ],
+  "playerVictory": [
+    "Najjači opstaju"
+  ],
+  "enterTeam": "%s koliko %s ima:",
+  "enterPlayer": "%s koliko %s ima u ovom %s:",
+  "playerScore": "%s %s %d's %s:",
+  "victoryMsg": "%s, najbolja %s:",
+  "playerRank": "%s %d %s je %d"
+}

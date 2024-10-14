@@ -1,0 +1,35 @@
+{
+  "enter": [
+    "Enter",
+    "Put in",
+    "Put out",
+    "Give me"
+  ],
+  "player": [
+    "bro",
+    "contestant",
+    "player"
+  ],
+  "team": [
+    "team",
+    "gathering",
+    "merry band",
+    "player group"
+  ],
+  "score": [
+    "score",
+    "medals",
+    "stars"
+  ],
+  "teamVictory": [
+    "Teamwork to survival"
+  ],
+  "playerVictory": [
+    "Strongman"
+  ],
+  "enterTeam": "%s how many %ss are there:",
+  "enterPlayer": "%s how many %ss are there in this %s:",
+  "playerScore": "%s %s %d's %s:",
+  "victoryMsg": "%s, the best %ss:",
+  "playerRank": "%s %d's %s is %d"
+}

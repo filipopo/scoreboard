@@ -1,0 +1,45 @@
+{
+  "enter": [
+    "Enter",
+    "Put in",
+    "Put out",
+    "Give me",
+    "Davai",
+    "Gurni"
+  ],
+  "player": [
+    "bro",
+    "contestant",
+    "kursadžija",
+    "sperminator",
+    "pussy destroyer",
+    "brat moj"
+  ],
+  "team": [
+    "team",
+    "no homo brojob",
+    "gangbang",
+    "braća bez gaća",
+    "meat beater",
+    "sinner group"
+  ],
+  "score": [
+    "cumshot count",
+    "amount of spilled milk",
+    "dick juice",
+    "merilo svršotine",
+    "white stuff amount",
+    "pena od sapunjanje"
+  ],
+  "teamVictory": [
+    "We cum in pairs"
+  ],
+  "playerVictory": [
+    "Iron balls"
+  ],
+  "enterTeam": "%s how many %ss are there:",
+  "enterPlayer": "%s how many %ss are there in this %s:",
+  "playerScore": "%s %s %d's %s:",
+  "victoryMsg": "%s, the best %ss:",
+  "playerRank": "%s %d's %s is %d"
+}

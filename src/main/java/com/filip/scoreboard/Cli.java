@@ -34,12 +34,12 @@ class Cli {
     print(s.victoryMsg, s.random(s.teamVictory), s.random(s.team));
 
     n = 1;
-    for (Team team : manager.team) {
-      print("#%d - %s %d:", n, s.random(s.team), team.index);
+    for (Team team : manager.getTeam()) {
+      print("#%d - %s %d:", n, s.random(s.team), team.getIndex());
 
       int i = 1;
-      for (Player p : team.player) {
-        print(s.playerRank, s.random(s.player), i, s.random(s.score), p.score);
+      for (Player p : team.getPlayer()) {
+        print(s.playerRank, s.random(s.player), i, s.random(s.score), p.getScore());
         i++;
       }
 
@@ -51,9 +51,9 @@ class Cli {
     print(s.victoryMsg, s.random(s.playerVictory), s.random(s.player));
 
     n = 1;
-    for (Player p : manager.player) {
+    for (Player p : manager.getPlayer()) {
       System.out.printf("#%d - ", n);
-      print(s.playerRank, s.random(s.player), p.index, s.random(s.score), p.score);
+      print(s.playerRank, s.random(s.player), p.getIndex(), s.random(s.score), p.getScore());
       n++;
     }
   }

@@ -116,17 +116,8 @@ class Synonyms {
     return singleObj;
   }
 
-  public String[] enter;
-  public String[] player;
-  public String[] team;
-  public String[] score;
-  public String[] teamVictory;
-  public String[] playerVictory;
-  public String enterTeam;
-  public String enterPlayer;
-  public String playerScore;
-  public String victoryMsg;
-  public String playerRank;
+  public String[] enter, player, team, score, teamVictory, playerVictory;
+  public String enterTeam, enterPlayer, playerScore, victoryMsg, playerRank;
 
   public void loadConf(String path) {
     ObjectMapper objectMapper = new ObjectMapper();

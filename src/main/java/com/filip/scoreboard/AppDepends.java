@@ -1,6 +1,8 @@
 package com.filip.scoreboard;
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,7 @@ class Team {
     return index;
   }
 
-  public ArrayList<Player> getPlayer() {
+  public List<Player> getPlayer() {
     return player;
   }
 
@@ -53,7 +55,7 @@ class TeamManager {
   private ArrayList<Team> team = new ArrayList<Team>();
   private ArrayList<Player> player = new ArrayList<Player>();
 
-  public ArrayList<Team> getTeam() {
+  public List<Team> getTeam() {
     return team;
   }
 
@@ -61,7 +63,7 @@ class TeamManager {
     team.add(new Team(team.size() + 1));
   }
 
-  public ArrayList<Player> getPlayer() {
+  public List<Player> getPlayer() {
     return player;
   }
 
@@ -116,8 +118,111 @@ class Synonyms {
     return singleObj;
   }
 
-  public String[] enter, player, team, score, teamVictory, playerVictory;
-  public String enterTeam, enterPlayer, playerScore, victoryMsg, playerRank;
+  private String random(String[] arr) {
+    int random = ThreadLocalRandom.current().nextInt(0, arr.length);
+    return arr[random];
+  }
+
+  private String[] enter,
+    player,
+    team,
+    score,
+    teamVictory,
+    playerVictory;
+  
+  public String getEnter() {
+    return random(this.enter);
+  }
+
+  public void setEnter(String[] enter) {
+    this.enter = enter;
+  }
+
+  public String getPlayer() {
+    return random(this.player);
+  }
+
+  public void setPlayer(String[] player) {
+    this.player = player;
+  }
+
+  public String getTeam() {
+    return random(this.team);
+  }
+
+  public void setTeam(String[] team) {
+    this.team = team;
+  }
+
+  public String getScore() {
+    return random(this.score);
+  }
+
+  public void setScore(String[] score) {
+    this.score = score;
+  }
+
+  public String getTeamVictory() {
+    return random(this.teamVictory);
+  }
+
+  public void setTeamVictory(String[] teamVictory) {
+    this.teamVictory = teamVictory;
+  }
+
+  public String getPlayerVictory() {
+    return random(this.playerVictory);
+  }
+
+  public void setPlayerVictory(String[] playerVictory) {
+    this.playerVictory = playerVictory;
+  }
+
+  private String enterTeam,
+    enterPlayer,
+    playerScore,
+    victoryMsg,
+    playerRank;
+
+  public String getEnterTeam() {
+    return this.enterTeam;
+  }
+
+  public void setEnterTeam(String enterTeam) {
+    this.enterTeam = enterTeam;
+  }
+
+  public String getEnterPlayer() {
+    return this.enterPlayer;
+  }
+
+  public void setEnterPlayer(String enterPlayer) {
+    this.enterPlayer = enterPlayer;
+  }
+
+  public String getPlayerScore() {
+    return this.playerScore;
+  }
+
+  public void setPlayerScore(String playerScore) {
+    this.playerScore = playerScore;
+  }
+
+  public String getVictoryMsg() {
+    return this.victoryMsg;
+  }
+
+  public void setVictoryMsg(String victoryMsg) {
+    this.victoryMsg = victoryMsg;
+  }
+
+  public String getPlayerRank() {
+    return this.playerRank;
+  }
+
+  public void setPlayerRank(String playerRank) {
+    this.playerRank = playerRank;
+  }
 
   public void loadConf(String path) {
     ObjectMapper objectMapper = new ObjectMapper();
@@ -127,25 +232,21 @@ class Synonyms {
     try {
       messages = objectMapper.readValue(file, Synonyms.class);
     } catch (IOException e) {
-      System.out.println("Couldn't read " + file);
+      Logger logger = Logger.getLogger(getClass().getName());
+      logger.severe("Couldn't read " + file);
       System.exit(1);
     }
 
-    this.enter = messages.enter;
-    this.player = messages.player;
-    this.team = messages.team;
-    this.score = messages.score;
-    this.teamVictory = messages.teamVictory;
-    this.playerVictory = messages.playerVictory;
-    this.enterTeam = messages.enterTeam;
-    this.enterPlayer = messages.enterPlayer;
-    this.playerScore = messages.playerScore;
-    this.victoryMsg = messages.victoryMsg;
-    this.playerRank = messages.playerRank;
-  }
-
-  public String random(String[] arr) {
-    int random = ThreadLocalRandom.current().nextInt(0, arr.length);
-    return arr[random];
+    setEnter(messages.enter);
+    setPlayer(messages.player);
+    setTeam(messages.team);
+    setScore(messages.score);
+    setTeamVictory(messages.teamVictory);
+    setPlayerVictory(messages.playerVictory);
+    setEnterTeam(messages.enterTeam);
+    setEnterPlayer(messages.enterPlayer);
+    setPlayerScore(messages.playerScore);
+    setVictoryMsg(messages.victoryMsg);
+    setPlayerRank(messages.playerRank);
   }
 }

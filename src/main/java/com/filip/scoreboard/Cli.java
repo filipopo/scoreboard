@@ -10,19 +10,19 @@ class Cli {
   public Cli(Synonyms s) {
     Scanner input = new Scanner(System.in);
 
-    print(s.enterTeam, s.random(s.enter), s.random(s.team));
+    print(s.getEnterTeam(), s.getEnter(), s.getTeam());
     int n = input.nextInt();
     TeamManager manager = new TeamManager();
 
     for(int i = 0; i < n; i++) {
       manager.addTeam();
-      print("\n%s %d:", s.random(s.team), i + 1);
+      print("\n%s %d:", s.getTeam(), i + 1);
 
-      print(s.enterPlayer, s.random(s.enter), s.random(s.player), s.random(s.team));
+      print(s.getEnterPlayer(), s.getEnter(), s.getPlayer(), s.getTeam());
       int num = input.nextInt();
 
       for (int j = 1; j <= num; j++) {
-        print(s.playerScore, s.random(s.enter), s.random(s.player), j, s.random(s.score));
+        print(s.getPlayerScore(), s.getEnter(), s.getPlayer(), j, s.getScore());
         manager.addPlayer(i, input.nextInt());
       }
     }
@@ -31,29 +31,29 @@ class Cli {
     manager.sortTeams();
 
     System.out.println('\n');
-    print(s.victoryMsg, s.random(s.teamVictory), s.random(s.team));
+    print(s.getVictoryMsg(), s.getTeamVictory(), s.getTeam());
 
     n = 1;
     for (Team team : manager.getTeam()) {
-      print("#%d - %s %d:", n, s.random(s.team), team.getIndex());
+      print("#%d - %s %d:", n, s.getTeam(), team.getIndex());
 
       int i = 1;
       for (Player p : team.getPlayer()) {
-        print(s.playerRank, s.random(s.player), i, s.random(s.score), p.getScore());
+        print(s.getPlayerRank(), s.getPlayer(), i, s.getScore(), p.getScore());
         i++;
       }
 
-      print("--\n%d %s\n", team.score(), s.random(s.score));
+      print("--\n%d %s\n", team.score(), s.getScore());
       n++;
     }
 
     manager.sortPlayers();
-    print(s.victoryMsg, s.random(s.playerVictory), s.random(s.player));
+    print(s.getVictoryMsg(), s.getPlayerVictory(), s.getPlayer());
 
     n = 1;
     for (Player p : manager.getPlayer()) {
       System.out.printf("#%d - ", n);
-      print(s.playerRank, s.random(s.player), p.getIndex(), s.random(s.score), p.getScore());
+      print(s.getPlayerRank(), s.getPlayer(), p.getIndex(), s.getScore(), p.getScore());
       n++;
     }
   }

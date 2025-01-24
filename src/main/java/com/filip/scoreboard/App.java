@@ -1,13 +1,13 @@
 package com.filip.scoreboard;
 
 public class App {
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     String path;
     boolean cli = false;
 
     if (args.length > 0) {
       if (args.length > 1)
-        cli = args[1].toLowerCase().equals("--cli");
+        cli = args[1].equalsIgnoreCase("--cli");
 
       path = args[0];
     } else

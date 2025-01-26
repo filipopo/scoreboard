@@ -134,48 +134,24 @@ class Synonyms {
     return random(this.enter);
   }
 
-  public void setEnter(String[] enter) {
-    this.enter = enter;
-  }
-
   public String getPlayer() {
     return random(this.player);
-  }
-
-  public void setPlayer(String[] player) {
-    this.player = player;
   }
 
   public String getTeam() {
     return random(this.team);
   }
 
-  public void setTeam(String[] team) {
-    this.team = team;
-  }
-
   public String getScore() {
     return random(this.score);
-  }
-
-  public void setScore(String[] score) {
-    this.score = score;
   }
 
   public String getTeamVictory() {
     return random(this.teamVictory);
   }
 
-  public void setTeamVictory(String[] teamVictory) {
-    this.teamVictory = teamVictory;
-  }
-
   public String getPlayerVictory() {
     return random(this.playerVictory);
-  }
-
-  public void setPlayerVictory(String[] playerVictory) {
-    this.playerVictory = playerVictory;
   }
 
   private String enterTeam,
@@ -188,40 +164,20 @@ class Synonyms {
     return this.enterTeam;
   }
 
-  public void setEnterTeam(String enterTeam) {
-    this.enterTeam = enterTeam;
-  }
-
   public String getEnterPlayer() {
     return this.enterPlayer;
-  }
-
-  public void setEnterPlayer(String enterPlayer) {
-    this.enterPlayer = enterPlayer;
   }
 
   public String getPlayerScore() {
     return this.playerScore;
   }
 
-  public void setPlayerScore(String playerScore) {
-    this.playerScore = playerScore;
-  }
-
   public String getVictoryMsg() {
     return this.victoryMsg;
   }
 
-  public void setVictoryMsg(String victoryMsg) {
-    this.victoryMsg = victoryMsg;
-  }
-
   public String getPlayerRank() {
     return this.playerRank;
-  }
-
-  public void setPlayerRank(String playerRank) {
-    this.playerRank = playerRank;
   }
 
   public void loadConf(String path) {
@@ -237,16 +193,16 @@ class Synonyms {
       System.exit(1);
     }
 
-    setEnter(messages.enter);
-    setPlayer(messages.player);
-    setTeam(messages.team);
-    setScore(messages.score);
-    setTeamVictory(messages.teamVictory);
-    setPlayerVictory(messages.playerVictory);
-    setEnterTeam(messages.enterTeam);
-    setEnterPlayer(messages.enterPlayer);
-    setPlayerScore(messages.playerScore);
-    setVictoryMsg(messages.victoryMsg);
-    setPlayerRank(messages.playerRank);
+    this.enter = messages.enter;
+    this.player = messages.player;
+    this.team = messages.team;
+    this.score = messages.score;
+    this.teamVictory = messages.teamVictory;
+    this.playerVictory = messages.playerVictory;
+    this.enterTeam = messages.enterTeam;
+    this.enterPlayer = messages.enterPlayer;
+    this.playerScore = messages.playerScore;
+    this.victoryMsg = messages.victoryMsg;
+    this.playerRank = messages.playerRank;
   }
 }

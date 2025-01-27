@@ -42,12 +42,24 @@ class Team {
     return player;
   }
 
-  public int score() {
+  public Player getPlayer(int i) {
+    return player.get(i);
+  }
+
+  public void addPlayer(Player p) {
+    player.add(p);
+  }
+
+  public int getScore() {
     int sum = 0;
     for(Player p : player)
       sum += p.getScore();
 
     return sum;
+  }
+
+  public int getScore(int p) {
+    return player.get(p).getScore();
   }
 }
 
@@ -59,6 +71,10 @@ class TeamManager {
     return team;
   }
 
+  public Team getTeam(int i) {
+    return team.get(i);
+  }
+
   public void addTeam() {
     team.add(new Team(team.size() + 1));
   }
@@ -67,19 +83,21 @@ class TeamManager {
     return player;
   }
 
+  public Player getPlayer(int i) {
+    return player.get(i);
+  }
+
   public void addPlayer(int i, int score) {
     Player p = new Player(player.size() + 1, score);
-    Team t = team.get(i);
-
-    t.getPlayer().add(p);
+    team.get(i).addPlayer(p);
     player.add(p);
   }
 
   public void sortTeams() {
     for (int i = 0; i < team.size() - 1; i++) {
       for (int j = 0; j < team.size() - i - 1; j++) {
-        int score = team.get(j).score();
-        int nextScore = team.get(j + 1).score();
+        int score = team.get(j).getScore();
+        int nextScore = team.get(j + 1).getScore();
 
         if (score < nextScore) {
           Team t = team.get(j);

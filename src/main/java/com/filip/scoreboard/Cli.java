@@ -34,16 +34,16 @@ class Cli {
     print(s.getVictoryMsg(), s.getTeamVictory(), s.getTeam());
 
     n = 1;
-    for (Team team : manager.getTeam()) {
-      print("#%d - %s %d:", n, s.getTeam(), team.getIndex());
+    for (Team t : manager.getTeam()) {
+      print("#%d - %s %d:", n, s.getTeam(), t.getIndex());
 
       int i = 1;
-      for (Player p : team.getPlayer()) {
+      for (Player p : t.getPlayer()) {
         print(s.getPlayerRank(), s.getPlayer(), i, s.getScore(), p.getScore());
         i++;
       }
 
-      print("--\n%d %s\n", team.score(), s.getScore());
+      print("--\n%d %s\n", t.getScore(), s.getScore());
       n++;
     }
 

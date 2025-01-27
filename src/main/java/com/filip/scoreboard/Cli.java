@@ -21,8 +21,8 @@ class Cli {
       print(s.getEnterPlayer(), s.getEnter(), s.getPlayer(), s.getTeam());
       int num = input.nextInt();
 
-      for (int j = 1; j <= num; j++) {
-        print(s.getPlayerScore(), s.getEnter(), s.getPlayer(), j, s.getScore());
+      for (int j = 0; j < num; j++) {
+        print(s.getPlayerScore(), s.getEnter(), s.getPlayer(), manager.getPlayer().size() + 1, s.getScore());
         manager.addPlayer(i, input.nextInt());
       }
     }
@@ -37,11 +37,8 @@ class Cli {
     for (Team t : manager.getTeam()) {
       print("#%d - %s %d:", n, s.getTeam(), t.getIndex());
 
-      int i = 1;
-      for (Player p : t.getPlayer()) {
-        print(s.getPlayerRank(), s.getPlayer(), i, s.getScore(), p.getScore());
-        i++;
-      }
+      for (Player p : t.getPlayer())
+        print(s.getPlayerRank(), s.getPlayer(), p.getIndex(), s.getScore(), p.getScore());
 
       print("--\n%d %s\n", t.getScore(), s.getScore());
       n++;

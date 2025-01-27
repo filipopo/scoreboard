@@ -9,16 +9,22 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 class Player {
-  public Player(int index, int score) {
+  public Player(int index, int team, int score) {
     this.index = index;
+    this.team = team;
     this.score = score;
   }
 
   private int index;
+  private int team;
   private int score;
 
   public int getIndex() {
     return index;
+  }
+
+  public int getTeam() {
+    return team;
   }
 
   public int getScore() {
@@ -88,7 +94,7 @@ class TeamManager {
   }
 
   public void addPlayer(int i, int score) {
-    Player p = new Player(player.size() + 1, score);
+    Player p = new Player(player.size() + 1, i + 1, score);
     team.get(i).addPlayer(p);
     player.add(p);
   }

@@ -25,9 +25,9 @@
   "playerVictory": [
     "Najjači opstaju"
   ],
-  "enterTeam": "%s koliko %s ima:",
-  "enterPlayer": "%s koliko %s ima u ovom %s:",
-  "playerScore": "%s %s %d's %s:",
-  "victoryMsg": "%s, najbolja %s:",
-  "playerRank": "%s %d %s je %d"
+  "enterTeam": "%1$s koliko %2$s ima:",
+  "enterPlayer": "%1$s koliko %2$s ima u ovom %3$s:",
+  "playerScore": "%1$s %2$s %3$d's %4$s:",
+  "victoryMsg": "%1$s, najbolja %2$s:",
+  "playerRank": "%1$s %2$d %3$s je %4$d"
 }

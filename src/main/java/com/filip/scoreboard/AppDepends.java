@@ -74,10 +74,6 @@ class Team implements Scorable {
     return new ArrayList<>(player.values());
   }
 
-  public Player getPlayer(String id) {
-    return player.get(id);
-  }
-
   public void addPlayer(Player p) {
     player.put(p.getId(), p);
   }
@@ -115,10 +111,6 @@ class TeamManager {
 
   public Player getPlayer(String id) {
     return player.get(id);
-  }
-
-  public void addPlayer(Player p) {
-    player.put(p.getId(), p);
   }
 
   public void addPlayer(String id, int score) {

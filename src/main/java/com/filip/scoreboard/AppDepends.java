@@ -1,132 +1,151 @@
 package com.filip.scoreboard;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Logger;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 import java.io.File;
 import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-class Player {
-  public Player(int index, int team, int score) {
-    this.index = index;
+interface Scorable {
+  String getId();
+  int getScore();
+}
+
+class Player implements Scorable {
+  public Player(String id, Team team, int score) {
+    this.id = id;
     this.team = team;
     this.score = score;
   }
 
-  private int index;
-  private int team;
+  private String id;
+  private Team team;
   private int score;
 
-  public int getIndex() {
-    return index;
+  @Override
+  public String getId() {
+    return id;
   }
 
-  public int getTeam() {
-    return team;
+  public void setId(String id) {
+    this.id = id;
   }
 
+  public String getTeam() {
+    return team.getId();
+  }
+
+  public void setTeam(Team team) {
+    this.team = team;
+  }
+
+  @Override
   public int getScore() {
     return score;
   }
+
+  public void setScore(int score) {
+    this.score = score;
+  }
 }
 
-class Team {
-  public Team(int index) {
-    this.index = index;
+class Team implements Scorable {
+  public Team(String id) {
+    this.id = id;
   }
 
-  private int index;
-  private ArrayList<Player> player = new ArrayList<Player>();
+  private String id;
+  private Map<String, Player> player = new LinkedHashMap<>();
 
-  public int getIndex() {
-    return index;
+  @Override
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public List<Player> getPlayer() {
-    return player;
+    return new ArrayList<>(player.values());
   }
 
-  public Player getPlayer(int i) {
-    return player.get(i);
+  public Player getPlayer(String id) {
+    return player.get(id);
   }
 
   public void addPlayer(Player p) {
-    player.add(p);
+    player.put(p.getId(), p);
   }
 
+  @Override
   public int getScore() {
-    int sum = 0;
-    for(Player p : player)
-      sum += p.getScore();
-
-    return sum;
-  }
-
-  public int getScore(int p) {
-    return player.get(p).getScore();
+    return player.values().stream().mapToInt(Player::getScore).sum();
   }
 }
 
 class TeamManager {
-  private ArrayList<Team> team = new ArrayList<Team>();
-  private ArrayList<Player> player = new ArrayList<Player>();
+  private Map<String, Team> team = new LinkedHashMap<>();
+  private Map<String, Player> player = new LinkedHashMap<>();
 
   public List<Team> getTeam() {
-    return team;
+    return new ArrayList<>(team.values());
   }
 
-  public Team getTeam(int i) {
-    return team.get(i);
+  public Team getTeam(String id) {
+    return team.get(id);
   }
 
   public void addTeam() {
-    team.add(new Team(team.size() + 1));
+    Team t = new Team(Integer.toString(team.size() + 1));
+    team.put(t.getId(), t);
+  }
+
+  public void addTeam(String id) {
+    team.put(id, new Team(id));
   }
 
   public List<Player> getPlayer() {
-    return player;
+    return new ArrayList<>(player.values());
   }
 
-  public Player getPlayer(int i) {
-    return player.get(i);
+  public Player getPlayer(String id) {
+    return player.get(id);
   }
 
-  public void addPlayer(int i, int score) {
-    Player p = new Player(player.size() + 1, i + 1, score);
-    team.get(i).addPlayer(p);
-    player.add(p);
+  public void addPlayer(Player p) {
+    player.put(p.getId(), p);
   }
 
+  public void addPlayer(String id, int score) {
+    Team t = team.get(id);
+    Player p = new Player(Integer.toString(player.size() + 1), t, score);
+
+    player.put(p.getId(), p);
+    t.addPlayer(p);
+  }
+
+  private <T extends Scorable> void sortByValue(Map<String, T> LinkedHm) {
+    List<T> sortedHm = new ArrayList<>(LinkedHm.values());
+    sortedHm.sort((e1, e2) -> Integer.compare(e2.getScore(), e1.getScore()));
+
+    LinkedHm.clear();
+    for (T e : sortedHm)
+      LinkedHm.put(e.getId(), e);
+  }
+
+  // Sort by team scores in descending order and recreate the LinkedHasMap
   public void sortTeams() {
-    for (int i = 0; i < team.size() - 1; i++) {
-      for (int j = 0; j < team.size() - i - 1; j++) {
-        int score = team.get(j).getScore();
-        int nextScore = team.get(j + 1).getScore();
-
-        if (score < nextScore) {
-          Team t = team.get(j);
-          team.set(j, team.get(j + 1));
-          team.set(j + 1, t);
-        }
-      }
-    }
+    sortByValue(team);
   }
 
+  // Sort by player scores in descending order and recreate the LinkedHasMap
   public void sortPlayers() {
-    for (int i = 0; i < player.size() - 1; i++) {
-      for (int j = 0; j < player.size() - i - 1; j++) {
-        int score = player.get(j).getScore();
-        int nextScore = player.get(j + 1).getScore();
-
-        if (score < nextScore) {
-          Player p = player.get(j);
-          player.set(j, player.get(j + 1));
-          player.set(j + 1, p);
-        }
-      }
-    }
+    sortByValue(player);
   }
 }
 

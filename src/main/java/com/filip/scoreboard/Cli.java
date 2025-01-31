@@ -14,16 +14,16 @@ class Cli {
     int n = input.nextInt();
     TeamManager manager = new TeamManager();
 
-    for(int i = 0; i < n; i++) {
+    for(int i = 1; i <= n; i++) {
       manager.addTeam();
-      print("\n%s %d:", s.getTeam(), i + 1);
+      print("\n%s %d:", s.getTeam(), i);
 
       print(s.getEnterPlayer(), s.getEnter(), s.getPlayer(), s.getTeam());
       int num = input.nextInt();
 
       for (int j = 0; j < num; j++) {
         print(s.getPlayerScore(), s.getEnter(), s.getPlayer(), manager.getPlayer().size() + 1, s.getScore());
-        manager.addPlayer(i, input.nextInt());
+        manager.addPlayer(Integer.toString(i), input.nextInt());
       }
     }
 
@@ -35,10 +35,10 @@ class Cli {
 
     n = 1;
     for (Team t : manager.getTeam()) {
-      print("#%d - %s %d:", n, s.getTeam(), t.getIndex());
+      print("#%d - %s %s:", n, s.getTeam(), t.getId());
 
       for (Player p : t.getPlayer())
-        print(s.getPlayerRank(), s.getPlayer(), p.getIndex(), s.getScore(), p.getScore());
+        print(s.getPlayerRank(), s.getPlayer(), p.getId(), s.getScore(), p.getScore());
 
       print("--\n%d %s\n", t.getScore(), s.getScore());
       n++;
@@ -50,7 +50,7 @@ class Cli {
     n = 1;
     for (Player p : manager.getPlayer()) {
       System.out.printf("#%d - ", n);
-      print(s.getPlayerRank(), s.getPlayer(), p.getIndex(), s.getScore(), p.getScore());
+      print(s.getPlayerRank(), s.getPlayer(), p.getId(), s.getScore(), p.getScore());
       n++;
     }
   }

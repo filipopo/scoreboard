@@ -31,5 +31,5 @@
   "enterPlayer": "%1$s how many %2$ss are there in this %3$s:",
   "playerScore": "%1$s %2$s %3$d's %4$s:",
   "victoryMsg": "%1$s, the best %2$ss:",
-  "playerRank": "%1$s %2$d's %3$s is %4$d"
+  "playerRank": "%1$s %2$s's %3$s is %4$d"
 }

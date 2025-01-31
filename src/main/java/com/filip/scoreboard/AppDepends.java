@@ -121,13 +121,13 @@ class TeamManager {
     t.addPlayer(p);
   }
 
-  private <T extends Scorable> void sortByValue(Map<String, T> LinkedHm) {
-    List<T> sortedHm = new ArrayList<>(LinkedHm.values());
+  private <T extends Scorable> void sortByValue(Map<String, T> linkedHm) {
+    List<T> sortedHm = new ArrayList<>(linkedHm.values());
     sortedHm.sort((e1, e2) -> Integer.compare(e2.getScore(), e1.getScore()));
 
-    LinkedHm.clear();
+    linkedHm.clear();
     for (T e : sortedHm)
-      LinkedHm.put(e.getId(), e);
+      linkedHm.put(e.getId(), e);
   }
 
   // Sort by team scores in descending order and recreate the LinkedHasMap

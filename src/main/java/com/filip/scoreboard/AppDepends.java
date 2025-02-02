@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 interface Scorable {
   String getId();
+  void setId(String id);
   int getScore();
 }
 
@@ -31,12 +32,13 @@ class Player implements Scorable {
     return id;
   }
 
+  @Override
   public void setId(String id) {
     this.id = id;
   }
 
-  public String getTeam() {
-    return team.getId();
+  public Team getTeam() {
+    return team;
   }
 
   public void setTeam(Team team) {
@@ -59,28 +61,33 @@ class Team implements Scorable {
   }
 
   private String id;
-  private Map<String, Player> player = new LinkedHashMap<>();
+  private List<Player> player = new ArrayList<>();
 
   @Override
   public String getId() {
     return id;
   }
 
+  @Override
   public void setId(String id) {
     this.id = id;
   }
 
   public List<Player> getPlayer() {
-    return new ArrayList<>(player.values());
+    return player;
   }
 
   public void addPlayer(Player p) {
-    player.put(p.getId(), p);
+    player.add(p);
+  }
+
+  public void removePlayer(String id) {
+    player.remove(id);
   }
 
   @Override
   public int getScore() {
-    return player.values().stream().mapToInt(Player::getScore).sum();
+    return player.stream().mapToInt(Player::getScore).sum();
   }
 }
 
@@ -105,6 +112,10 @@ class TeamManager {
     team.put(id, new Team(id));
   }
 
+  public void removeTeam(String id) {
+    team.remove(id);
+  }
+
   public List<Player> getPlayer() {
     return new ArrayList<>(player.values());
   }
@@ -119,6 +130,25 @@ class TeamManager {
 
     player.put(p.getId(), p);
     t.addPlayer(p);
+  }
+
+  public void removePlayer(String id) {
+    player.get(id).getTeam().removePlayer(id);
+    player.remove(id);
+  }
+
+  private <T extends Scorable> void updateId(Map<String, T> hm, String id, String newId) {
+    T entity = hm.remove(id); // Remove the old entry
+    entity.setId(newId); // Update the ID
+    hm.put(newId, entity); // Reinsert with the new key
+  }
+
+  public void updateTeamId(String id, String newId) {
+    updateId(team, id, newId);
+  }
+
+  public void updatePlayerId(String id, String newId) {
+    updateId(player, id, newId);
   }
 
   private <T extends Scorable> void sortByValue(Map<String, T> linkedHm) {

@@ -15,7 +15,6 @@ class Cli {
     TeamManager manager = new TeamManager();
 
     for(int i = 1; i <= n; i++) {
-      manager.addTeam();
       print("\n%s %d:", s.getTeam(), i);
 
       print(s.getEnterPlayer(), s.getEnter(), s.getPlayer(), s.getTeam());

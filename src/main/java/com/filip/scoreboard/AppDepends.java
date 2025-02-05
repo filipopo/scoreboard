@@ -79,10 +79,12 @@ class Team implements Scorable {
 
   public void addPlayer(Player p) {
     player.add(p);
+    p.setTeam(this);
   }
 
-  public void removePlayer(String id) {
-    player.remove(id);
+  public void removePlayer(Player p) {
+    player.remove(p);
+    p.setTeam(null);
   }
 
   @Override
@@ -103,13 +105,10 @@ class TeamManager {
     return team.get(id);
   }
 
-  public void addTeam() {
-    Team t = new Team(Integer.toString(team.size() + 1));
-    team.put(t.getId(), t);
-  }
-
-  public void addTeam(String id) {
-    team.put(id, new Team(id));
+  public Team addTeam(String id) {
+    Team t = new Team(id);
+    team.put(id, t);
+    return t;
   }
 
   public void removeTeam(String id) {
@@ -124,16 +123,21 @@ class TeamManager {
     return player.get(id);
   }
 
-  public void addPlayer(String id, int score) {
+  public Player addPlayer(String id, int score) {
     Team t = team.get(id);
-    Player p = new Player(Integer.toString(player.size() + 1), t, score);
+    if (t == null)
+      t = addTeam(id);
 
+    Player p = new Player(Integer.toString(player.size() + 1), t, score);
     player.put(p.getId(), p);
     t.addPlayer(p);
+
+    return p;
   }
 
   public void removePlayer(String id) {
-    player.get(id).getTeam().removePlayer(id);
+    Player p = player.get(id);
+    p.getTeam().removePlayer(p);
     player.remove(id);
   }
 

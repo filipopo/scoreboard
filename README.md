@@ -1,6 +1,6 @@
 # Scoreboard
 
-This is a scoreboard program for making rankings between teams and players for various games, featuring custom localization files, a gui (JavaFX), cli mode
+This is a scoreboard program for making rankings between teams and players for various games, featuring custom localization files, a gui (Swing), cli mode
 
 Run `mvn package` to create the jar file for this project
 

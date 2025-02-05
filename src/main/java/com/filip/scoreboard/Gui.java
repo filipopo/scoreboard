@@ -18,6 +18,18 @@ class Gui extends JFrame {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
 
+    // Table to display players and their scores
+    String[] colNames = {"Player", "Team", "Round score", "Total score"};
+
+    DefaultTableModel tableModel = new DefaultTableModel(colNames, 0) {
+      @Override
+      public boolean isCellEditable(int row, int col) {
+        return col != Col.TOTAL.getNum();
+      }
+    };
+
+    JTable table = new JTable(tableModel);
+
     // Label for the title
     JLabel titleLabel = new JLabel("Scoreboard Application", SwingConstants.CENTER);
     titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -63,72 +75,8 @@ class Gui extends JFrame {
     JScrollPane tableScrollPane = new JScrollPane(table);
     add(tableScrollPane, BorderLayout.CENTER);
 
-    // Button to add a player
-    addPlayerButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        manager.addPlayer("1", 0);
-        Player p = manager.getPlayer(Integer.toString(manager.getPlayer().size()));
-        playerId.add(p.getId());
-
-        scores.put(p.getId(), 0);
-        tableModel.addRow(new Object[] {p.getId(), 1, 0, 0});
-      }
-    });
-
-    // Button to sort by players
-    sortPlayersButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        clearPlayers();
-        manager.sortPlayers();
-
-        for (Player p : manager.getPlayer()) {
-          tableModel.addRow(new Object[] {
-            p.getId(), p.getTeam().getId(), p.getScore(), scores.get(p.getId())
-          });
-
-          playerId.add(p.getId());
-        }
-      }
-    });
-
-    // Button to sort by teams
-    sortTeamsButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        clearPlayers();
-        manager.sortTeams();
-
-        for (Team t : manager.getTeam()) {
-          for (Player p : t.getPlayer()) {
-            tableModel.addRow(new Object[] {
-              p.getId(), t.getId(), p.getScore(), scores.get(p.getId())
-            });
-
-            playerId.add(p.getId());
-          }
-        }
-      }
-    });
-
-    // Button to start next round
-    nextRoundButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        for (int row = 0; row < tableModel.getRowCount(); row++) {
-          Player p = manager.getPlayer(playerId.get(row));
-          scores.merge(p.getId(), p.getScore(), Integer::sum);
-          p.setScore(0);
-
-          tableModel.setValueAt(0, row, Col.SCORE.getNum());
-          tableModel.setValueAt(scores.get(p.getId()), row, Col.TOTAL.getNum());
-        }
-      }
-    });
-
     // Add button panel to the bottom
-    add(createButtonPanel(), BorderLayout.SOUTH);
+    add(createButtonPanel(tableModel), BorderLayout.SOUTH);
 
     // Add right-click context menu
     table.addMouseListener(new MouseAdapter() {
@@ -148,33 +96,69 @@ class Gui extends JFrame {
   }
 
   private TeamManager manager = new TeamManager();
+  private List<String> playerId = new ArrayList<String>();
   private Map<String, Integer> scores = new HashMap<>();
 
-  // Table to display players and their scores
-  private String[] colNames = {"Player", "Team", "Round score", "Total score"};
-
-  private DefaultTableModel tableModel = new DefaultTableModel(colNames, 0) {
-    @Override
-    public boolean isCellEditable(int row, int col) {
-      return col != Col.TOTAL.getNum();
-    }
-  };
-
-  private JTable table = new JTable(tableModel);
-
-  private List<String> playerId = new ArrayList<String>();
-  private void clearPlayers() {
-    playerId.clear();
-    tableModel.setRowCount(0);
-  }
-
-  private JButton addPlayerButton = new JButton("Add a player");
-  private JButton sortPlayersButton = new JButton("Sort by players");
-  private JButton sortTeamsButton = new JButton("Sort by teams");
-  private JButton nextRoundButton = new JButton("Next round");
-
   // Panel to hold buttons
-  private JPanel createButtonPanel() {
+  private JPanel createButtonPanel(DefaultTableModel tableModel) {
+    // Button to add a player
+    JButton addPlayerButton = new JButton("Add a player");
+    addPlayerButton.addActionListener(e -> {
+      manager.addPlayer("1", 0);
+      Player p = manager.getPlayer(Integer.toString(manager.getPlayer().size()));
+      playerId.add(p.getId());
+
+      scores.put(p.getId(), 0);
+      tableModel.addRow(new Object[] {p.getId(), 1, 0, 0});
+    });
+
+    // Button to sort by players
+    JButton sortPlayersButton = new JButton("Sort by players");
+    sortPlayersButton.addActionListener(e -> {
+      playerId.clear();
+      tableModel.setRowCount(0);
+      manager.sortPlayers();
+
+      for (Player p : manager.getPlayer()) {
+        tableModel.addRow(new Object[] {
+          p.getId(), p.getTeam().getId(), p.getScore(), scores.get(p.getId())
+        });
+
+        playerId.add(p.getId());
+      }
+    });
+
+    // Button to sort by teams
+    JButton sortTeamsButton = new JButton("Sort by teams");
+    sortTeamsButton.addActionListener(e -> {
+      playerId.clear();
+      tableModel.setRowCount(0);
+      manager.sortTeams();
+
+      for (Team t : manager.getTeam()) {
+        for (Player p : t.getPlayer()) {
+          tableModel.addRow(new Object[] {
+            p.getId(), t.getId(), p.getScore(), scores.get(p.getId())
+          });
+
+          playerId.add(p.getId());
+        }
+      }
+    });
+
+    // Button to start next round
+    JButton nextRoundButton = new JButton("Next round");
+    nextRoundButton.addActionListener(e -> {
+      for (int row = 0; row < tableModel.getRowCount(); row++) {
+        Player p = manager.getPlayer(playerId.get(row));
+        scores.merge(p.getId(), p.getScore(), Integer::sum);
+        p.setScore(0);
+
+        tableModel.setValueAt(0, row, Col.SCORE.getNum());
+        tableModel.setValueAt(scores.get(p.getId()), row, Col.TOTAL.getNum());
+      }
+    });
+
     JPanel playerPanel = new JPanel();
     playerPanel.add(sortPlayersButton);
     playerPanel.add(addPlayerButton);
@@ -194,6 +178,7 @@ class Gui extends JFrame {
     if (!e.isPopupTrigger())
       return;
 
+    JTable table = (JTable)e.getComponent();
     int row = table.rowAtPoint(e.getPoint());
     int col = table.columnAtPoint(e.getPoint());
 
@@ -209,7 +194,7 @@ class Gui extends JFrame {
     JMenuItem deleteItem = new JMenuItem("Delete row");
     deleteItem.addActionListener(event -> {
       manager.removePlayer(playerId.get(row));
-      tableModel.removeRow(row);
+      ((DefaultTableModel)table.getModel()).removeRow(row);
       playerId.remove(row);
     });
 

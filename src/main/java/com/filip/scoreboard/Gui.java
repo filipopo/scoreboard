@@ -47,8 +47,13 @@ class Gui extends JFrame {
         Col name = Col.values()[col];
         switch (name) {
           case PLAYER:
+            if (playerId.contains(data))
+              return;
+
             manager.updatePlayerId(player.getId(), data);
             playerId.set(row, data);
+            scores.put(data, scores.remove(player.getId()));
+
             break;
           case TEAM:
             Team t = manager.getTeam(data);
@@ -65,7 +70,10 @@ class Gui extends JFrame {
             t.addPlayer(player);
             break;
           case SCORE:
-            player.setScore(Integer.parseInt(data));
+            try {
+              player.setScore(Integer.parseInt(data));
+            } catch (NumberFormatException nfe) {}
+
             break;
           default:
         }
@@ -101,17 +109,6 @@ class Gui extends JFrame {
 
   // Panel to hold buttons
   private JPanel createButtonPanel(DefaultTableModel tableModel) {
-    // Button to add a player
-    JButton addPlayerButton = new JButton("Add a player");
-    addPlayerButton.addActionListener(e -> {
-      manager.addPlayer("1", 0);
-      Player p = manager.getPlayer(Integer.toString(manager.getPlayer().size()));
-      playerId.add(p.getId());
-
-      scores.put(p.getId(), 0);
-      tableModel.addRow(new Object[] {p.getId(), 1, 0, 0});
-    });
-
     // Button to sort by players
     JButton sortPlayersButton = new JButton("Sort by players");
     sortPlayersButton.addActionListener(e -> {
@@ -126,6 +123,17 @@ class Gui extends JFrame {
 
         playerId.add(p.getId());
       }
+    });
+
+    // Button to add a player
+    JButton addPlayerButton = new JButton("Add a player");
+    addPlayerButton.addActionListener(e -> {
+      manager.addPlayer("1", 0);
+      Player p = manager.getPlayer(Integer.toString(manager.getPlayer().size()));
+      playerId.add(p.getId());
+
+      scores.put(p.getId(), 0);
+      tableModel.addRow(new Object[] {p.getId(), 1, 0, 0});
     });
 
     // Button to sort by teams
@@ -164,12 +172,12 @@ class Gui extends JFrame {
     playerPanel.add(addPlayerButton);
     playerPanel.add(sortTeamsButton);
 
-    JPanel roundPanel = new JPanel();
-    roundPanel.add(nextRoundButton);
+    JPanel nextRoundPanel = new JPanel();
+    nextRoundPanel.add(nextRoundButton);
 
     JPanel panel = new JPanel(new BorderLayout());
     panel.add(playerPanel, BorderLayout.CENTER);
-    panel.add(roundPanel, BorderLayout.EAST);
+    panel.add(nextRoundPanel, BorderLayout.EAST);
 
     return panel;
   }

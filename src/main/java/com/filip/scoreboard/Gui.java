@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 
 class Gui extends JFrame {
   public Gui(Synonyms synonyms) {
@@ -31,7 +28,7 @@ class Gui extends JFrame {
     };
 
     JTable table = new JTable(tableModel);
-    setCellEditors(table);
+    setCustomCells(table);
 
     // Label for the title
     JLabel titleLabel = new JLabel(title + "1", SwingConstants.CENTER);
@@ -302,8 +299,10 @@ class Gui extends JFrame {
     popupMenu.show(table, e.getX(), e.getY());
   }
 
-  private void setCellEditors(JTable table) {
+  private void setCustomCells(JTable table) {
     TableColumnModel colModel = table.getColumnModel();
+
+    colModel.getColumn(Col.PLAYER.getNum()).setCellRenderer(new BoldCellRenderer());
 
     colModel.getColumn(Col.PLAYER.getNum()).setCellEditor(
       new PlayerCellEditor(new JTextField(), playerId)
@@ -312,6 +311,17 @@ class Gui extends JFrame {
     colModel.getColumn(Col.SCORE.getNum()).setCellEditor(
       new ScoreCellEditor(new JTextField())
     );
+  }
+}
+
+class BoldCellRenderer extends DefaultTableCellRenderer {
+  @Override
+  public Component getTableCellRendererComponent(
+    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column
+  ) {
+    Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+    c.setFont(new Font("Arial", Font.BOLD, 14));
+    return c;
   }
 }
 

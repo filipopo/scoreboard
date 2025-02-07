@@ -33,6 +33,7 @@ class Gui extends JFrame {
     setCellEditors(table);
 
     // Label for the title
+    JLabel titleLabel = new JLabel(title + "1", SwingConstants.CENTER);
     titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
     add(titleLabel, BorderLayout.NORTH);
 
@@ -78,7 +79,7 @@ class Gui extends JFrame {
     add(tableScrollPane, BorderLayout.CENTER);
 
     // Add button panel to the bottom
-    add(createButtonPanel(tableModel), BorderLayout.SOUTH);
+    add(createButtonPanel(tableModel, titleLabel), BorderLayout.SOUTH);
 
     // Add right-click context menu
     table.addMouseListener(new MouseAdapter() {
@@ -102,11 +103,9 @@ class Gui extends JFrame {
 
   private int round = 0;
   private int lastRound = 0;
-
   private String title = "Scoreboard, round ";
-  private JLabel titleLabel = new JLabel(title + "1", SwingConstants.CENTER);
 
-  private void goToLastRound(DefaultTableModel tableModel) {
+  private void goToLastRound(DefaultTableModel tableModel, JLabel titleLabel) {
     round = lastRound;
     titleLabel.setText(title + Integer.toString(round + 1));
 
@@ -118,7 +117,7 @@ class Gui extends JFrame {
   }
 
   // Panel to hold buttons
-  private JPanel createButtonPanel(DefaultTableModel tableModel) {
+  private JPanel createButtonPanel(DefaultTableModel tableModel, JLabel titleLabel) {
     // Button to go back to the previous round
     JButton previousRoundButton = new JButton("Previous round");
     previousRoundButton.addActionListener(e -> {
@@ -138,7 +137,7 @@ class Gui extends JFrame {
     // Button to sort by players
     JButton sortPlayersButton = new JButton("Sort by players");
     sortPlayersButton.addActionListener(e -> {
-      goToLastRound(tableModel);
+      goToLastRound(tableModel, titleLabel);
 
       playerId.clear();
       tableModel.setRowCount(0);
@@ -167,7 +166,7 @@ class Gui extends JFrame {
     // Button to sort by teams
     JButton sortTeamsButton = new JButton("Sort by teams");
     sortTeamsButton.addActionListener(e -> {
-      goToLastRound(tableModel);
+      goToLastRound(tableModel, titleLabel);
 
       playerId.clear();
       tableModel.setRowCount(0);
@@ -205,7 +204,7 @@ class Gui extends JFrame {
 
     // Button to go to last round
     JButton lastRoundButton = new JButton("Last round");
-    lastRoundButton.addActionListener(e -> goToLastRound(tableModel));
+    lastRoundButton.addActionListener(e -> goToLastRound(tableModel, titleLabel));
 
     JPanel previousRoundPanel = new JPanel();
     previousRoundPanel.add(previousRoundButton);

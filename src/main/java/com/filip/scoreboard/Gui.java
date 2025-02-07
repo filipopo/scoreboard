@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 class Gui extends JFrame {
   public Gui(Synonyms synonyms) {
@@ -29,14 +30,7 @@ class Gui extends JFrame {
     };
 
     JTable table = new JTable(tableModel);
-
-    table.getColumnModel().getColumn(Col.PLAYER.getNum()).setCellEditor(
-      new PlayerCellEditor(new JTextField(), playerId)
-    );
-
-    table.getColumnModel().getColumn(Col.SCORE.getNum()).setCellEditor(
-      new ScoreCellEditor(new JTextField())
-    );
+    setCellEditors(table);
 
     // Label for the title
     titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -262,6 +256,18 @@ class Gui extends JFrame {
     popupMenu.add(deleteItem);
 
     popupMenu.show(table, e.getX(), e.getY());
+  }
+
+  private void setCellEditors(JTable table) {
+    TableColumnModel colModel = table.getColumnModel();
+
+    colModel.getColumn(Col.PLAYER.getNum()).setCellEditor(
+      new PlayerCellEditor(new JTextField(), playerId)
+    );
+
+    colModel.getColumn(Col.SCORE.getNum()).setCellEditor(
+      new ScoreCellEditor(new JTextField())
+    );
   }
 }
 

@@ -199,7 +199,7 @@ class Gui extends JFrame {
       }
 
       int score = Integer.parseInt(scoreStr);
-      manager.addPlayer(name).setScore(round, score);
+      manager.addPlayer(name, team).setScore(round, score);
 
       playerId.add(name);
       tableModel.addRow(new Object[] {name, team, score, score});

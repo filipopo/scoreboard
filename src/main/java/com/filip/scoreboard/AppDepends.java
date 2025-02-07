@@ -142,12 +142,19 @@ class TeamManager {
   }
 
   public Player addPlayer(String id) {
-    Team t = team.get(id);
-    if (t == null)
-      t = addTeam(id);
+    return addPlayer(
+      Integer.toString(player.size() + 1),
+      id
+    );
+  }
 
-    Player p = new Player(Integer.toString(player.size() + 1), t);
-    player.put(p.getId(), p);
+  public Player addPlayer(String pId, String tId) {
+    Team t = team.get(tId);
+    if (t == null)
+      t = addTeam(tId);
+
+    Player p = new Player(pId, t);
+    player.put(pId, p);
     t.addPlayer(p);
 
     return p;

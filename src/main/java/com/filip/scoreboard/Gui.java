@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -155,12 +156,56 @@ class Gui extends JFrame {
     // Button to add a player
     JButton addPlayerButton = new JButton("Add a player");
     addPlayerButton.addActionListener(e -> {
-      manager.addPlayer("1");
-      Player p = manager.getPlayer(Integer.toString(manager.getPlayer().size()));
-      playerId.add(p.getId());
+      // Create a panel with a grid layout (2 columns: label and field)
+      JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
 
-      p.setScore(round, 0);
-      tableModel.addRow(new Object[] {p.getId(), 1, 0, 0});
+      // Create and add the fields
+      String name = Integer.toString(manager.getPlayer().size() + 1);
+      panel.add(new JLabel("Player Name:"));
+      JTextField nameField = new JTextField(name);
+      panel.add(nameField);
+
+      panel.add(new JLabel("Team:"));
+      JTextField teamField = new JTextField("1");
+      panel.add(teamField);
+
+      panel.add(new JLabel("Score:"));
+      JTextField scoreField = new JTextField("0");
+      panel.add(scoreField);
+
+      // Show a confirm dialog with the custom panel
+      int result = JOptionPane.showConfirmDialog(
+        this,
+        panel,
+        "Enter player details",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE
+      );
+
+      if (result != JOptionPane.OK_OPTION)
+        return;
+
+      // Retrieve input values
+      name = nameField.getText();
+      String team = teamField.getText();
+      String scoreStr = scoreField.getText();
+
+      // Validate using our utility methods
+      if (!Validator.isValidName(name, playerId)) {
+        JOptionPane.showMessageDialog(this, "Player already exists");
+        return;
+      }
+
+      if (!Validator.isValidScore(scoreStr)) {
+        JOptionPane.showMessageDialog(this, "Score must be a number");
+        return;
+      }
+
+      int score = Integer.parseInt(scoreStr);
+      manager.addPlayer(name).setScore(round, score);
+
+      playerId.add(name);
+      tableModel.addRow(new Object[] {name, team, score, score});
     });
 
     // Button to sort by teams
@@ -280,8 +325,8 @@ class PlayerCellEditor extends DefaultCellEditor {
 
   @Override
   public boolean stopCellEditing() {
-    if (playerId.contains(getCellEditorValue())) {
-      JOptionPane.showMessageDialog(null, "Player already exists");
+    if (!Validator.isValidName((String)getCellEditorValue(), playerId)) {
+      JOptionPane.showMessageDialog(getComponent(), "Player already exists");
       cancelCellEditing();
       return false;
     }
@@ -297,15 +342,33 @@ class ScoreCellEditor extends DefaultCellEditor {
 
   @Override
   public boolean stopCellEditing() {
-    try {
-      Integer.parseInt((String)getCellEditorValue());
-    } catch (NumberFormatException nfe) {
-      JOptionPane.showMessageDialog(null, "Score must be a number");
+    if (!Validator.isValidScore((String)getCellEditorValue())) {
+      JOptionPane.showMessageDialog(getComponent(), "Score must be a number");
       cancelCellEditing();
       return false;
     }
 
     return super.stopCellEditing();
+  }
+}
+
+class Validator {
+  // Validate that the player name isn't already in use.
+  public static boolean isValidName(String name, List<String> existingNames) {
+    if (existingNames.contains(name))
+      return false;
+    return true;
+  }
+
+  // Validate that the score string can be parsed into an integer.
+  public static boolean isValidScore(String scoreStr) {
+    try {
+      Integer.parseInt(scoreStr);
+    } catch (NumberFormatException e) {
+      return false;
+    }
+
+    return true;
   }
 }
 

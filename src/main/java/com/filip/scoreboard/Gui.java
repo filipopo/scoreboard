@@ -30,6 +30,14 @@ class Gui extends JFrame {
 
     JTable table = new JTable(tableModel);
 
+    table.getColumnModel().getColumn(Col.PLAYER.getNum()).setCellEditor(
+      new PlayerCellEditor(new JTextField(), playerId)
+    );
+
+    table.getColumnModel().getColumn(Col.SCORE.getNum()).setCellEditor(
+      new ScoreCellEditor(new JTextField())
+    );
+
     // Label for the title
     titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
     add(titleLabel, BorderLayout.NORTH);
@@ -46,9 +54,6 @@ class Gui extends JFrame {
         Col name = Col.values()[col];
         switch (name) {
           case PLAYER:
-            if (playerId.contains(data))
-              return;
-
             manager.updatePlayerId(p.getId(), data);
             playerId.set(row, data);
             break;
@@ -67,11 +72,8 @@ class Gui extends JFrame {
             t.addPlayer(p);
             break;
           case SCORE:
-            try {
-              p.setScore(round, Integer.parseInt(data));
-              tableModel.setValueAt(p.getScore(0, round), row, Col.TOTAL.getNum());
-            } catch (NumberFormatException nfe) {}
-
+            p.setScore(round, Integer.parseInt(data));
+            tableModel.setValueAt(p.getScore(0, round), row, Col.TOTAL.getNum());
             break;
           default:
         }
@@ -260,6 +262,45 @@ class Gui extends JFrame {
     popupMenu.add(deleteItem);
 
     popupMenu.show(table, e.getX(), e.getY());
+  }
+}
+
+class PlayerCellEditor extends DefaultCellEditor {
+  private List<String> playerId;
+
+  public PlayerCellEditor(JTextField textField, List<String> playerId) {
+    super(textField);
+    this.playerId = playerId;
+  }
+
+  @Override
+  public boolean stopCellEditing() {
+    if (playerId.contains(getCellEditorValue())) {
+      JOptionPane.showMessageDialog(null, "Player already exists");
+      cancelCellEditing();
+      return false;
+    }
+
+    return super.stopCellEditing();
+  }
+}
+
+class ScoreCellEditor extends DefaultCellEditor {
+  public ScoreCellEditor(JTextField textField) {
+    super(textField);
+  }
+
+  @Override
+  public boolean stopCellEditing() {
+    try {
+      Integer.parseInt((String)getCellEditorValue());
+    } catch (NumberFormatException nfe) {
+      JOptionPane.showMessageDialog(null, "Score must be a number");
+      cancelCellEditing();
+      return false;
+    }
+
+    return super.stopCellEditing();
   }
 }
 

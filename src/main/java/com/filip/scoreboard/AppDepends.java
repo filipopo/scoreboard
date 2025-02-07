@@ -17,15 +17,14 @@ interface Scorable {
 }
 
 class Player implements Scorable {
-  public Player(String id, Team team, int score) {
+  public Player(String id, Team team) {
     this.id = id;
     this.team = team;
-    this.score = score;
   }
 
   private String id;
   private Team team;
-  private int score;
+  private List<Integer> score = new ArrayList<>();;
 
   @Override
   public String getId() {
@@ -47,11 +46,30 @@ class Player implements Scorable {
 
   @Override
   public int getScore() {
-    return score;
+    return score.stream().reduce(0, (a, b) -> a + b);
   }
 
-  public void setScore(int score) {
-    this.score = score;
+  public int getScore(int round) {
+    return score.get(round);
+  }
+
+  public int getScore(int start, int end) {
+    int total = 0;
+    for (; start <= end; start++)
+      total += score.get(start);
+
+    return total;
+  }
+
+  public void addScore(int newScore) {
+    score.add(newScore);
+  }
+
+  public void setScore(int round, int newScore) {
+    while (score.size() <= round)
+      score.add(0);
+
+    score.set(round, newScore);
   }
 }
 
@@ -123,12 +141,12 @@ class TeamManager {
     return player.get(id);
   }
 
-  public Player addPlayer(String id, int score) {
+  public Player addPlayer(String id) {
     Team t = team.get(id);
     if (t == null)
       t = addTeam(id);
 
-    Player p = new Player(Integer.toString(player.size() + 1), t, score);
+    Player p = new Player(Integer.toString(player.size() + 1), t);
     player.put(p.getId(), p);
     t.addPlayer(p);
 

@@ -22,7 +22,7 @@ class Cli {
 
       for (int j = 0; j < num; j++) {
         print(s.getPlayerScore(), s.getEnter(), s.getPlayer(), manager.getPlayer().size() + 1, s.getScore());
-        manager.addPlayer(Integer.toString(i), input.nextInt());
+        manager.addPlayer(Integer.toString(i)).addScore(input.nextInt());
       }
     }
 

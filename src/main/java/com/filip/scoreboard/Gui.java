@@ -110,6 +110,17 @@ class Gui extends JFrame {
   private String title = "Scoreboard, round ";
   private JLabel titleLabel = new JLabel(title + "1", SwingConstants.CENTER);
 
+  private void goToLastRound(DefaultTableModel tableModel) {
+    round = lastRound;
+    titleLabel.setText(title + Integer.toString(round + 1));
+
+    for (int row = 0; row < tableModel.getRowCount(); row++) {
+      Player p = manager.getPlayer(playerId.get(row));
+      tableModel.setValueAt(p.getScore(round), row, Col.SCORE.getNum());
+      tableModel.setValueAt(p.getScore(), row, Col.TOTAL.getNum());
+    }
+  }
+
   // Panel to hold buttons
   private JPanel createButtonPanel(DefaultTableModel tableModel) {
     // Button to go back to the previous round
@@ -131,6 +142,8 @@ class Gui extends JFrame {
     // Button to sort by players
     JButton sortPlayersButton = new JButton("Sort by players");
     sortPlayersButton.addActionListener(e -> {
+      goToLastRound(tableModel);
+
       playerId.clear();
       tableModel.setRowCount(0);
       manager.sortPlayers();
@@ -158,6 +171,8 @@ class Gui extends JFrame {
     // Button to sort by teams
     JButton sortTeamsButton = new JButton("Sort by teams");
     sortTeamsButton.addActionListener(e -> {
+      goToLastRound(tableModel);
+
       playerId.clear();
       tableModel.setRowCount(0);
       manager.sortTeams();
@@ -194,16 +209,7 @@ class Gui extends JFrame {
 
     // Button to go to last round
     JButton lastRoundButton = new JButton("Last round");
-    lastRoundButton.addActionListener(e -> {
-      round = lastRound;
-      titleLabel.setText(title + Integer.toString(round + 1));
-
-      for (int row = 0; row < tableModel.getRowCount(); row++) {
-        Player p = manager.getPlayer(playerId.get(row));
-        tableModel.setValueAt(p.getScore(round), row, Col.SCORE.getNum());
-        tableModel.setValueAt(p.getScore(), row, Col.TOTAL.getNum());
-      }
-    });
+    lastRoundButton.addActionListener(e -> goToLastRound(tableModel));
 
     JPanel previousRoundPanel = new JPanel();
     previousRoundPanel.add(previousRoundButton);

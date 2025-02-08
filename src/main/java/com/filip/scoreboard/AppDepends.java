@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.ToIntFunction;
 import java.util.logging.Logger;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 interface Scorable {
   String getId();
   void setId(String id);
-  int getScore();
 }
 
 class Player implements Scorable {
@@ -44,9 +44,8 @@ class Player implements Scorable {
     this.team = team;
   }
 
-  @Override
   public int getScore() {
-    return score.stream().reduce(0, (a, b) -> a + b);
+    return getScore(0, score.size() - 1);
   }
 
   public int getScore(int round) {
@@ -105,9 +104,12 @@ class Team implements Scorable {
     p.setTeam(null);
   }
 
-  @Override
   public int getScore() {
     return player.stream().mapToInt(Player::getScore).sum();
+  }
+
+  public int getScore(int start, int end) {
+    return player.stream().mapToInt(p -> p.getScore(start, end)).sum();
   }
 }
 
@@ -180,23 +182,30 @@ class TeamManager {
     updateId(player, id, newId);
   }
 
-  private <T extends Scorable> void sortByValue(Map<String, T> linkedHm) {
+  // Sort by scores in descending order and recreate the LinkedHasMap
+  private <T extends Scorable> void sortByValue(Map<String, T> linkedHm, ToIntFunction<T> fun) {
     List<T> sortedHm = new ArrayList<>(linkedHm.values());
-    sortedHm.sort((e1, e2) -> Integer.compare(e2.getScore(), e1.getScore()));
+    sortedHm.sort((a, b) -> Integer.compare(fun.applyAsInt(b), fun.applyAsInt(a)));
 
     linkedHm.clear();
     for (T e : sortedHm)
       linkedHm.put(e.getId(), e);
   }
 
-  // Sort by team scores in descending order and recreate the LinkedHasMap
   public void sortTeams() {
-    sortByValue(team);
+    sortByValue(team, Team::getScore);
   }
 
-  // Sort by player scores in descending order and recreate the LinkedHasMap
+  public void sortTeams(int start, int end) {
+    sortByValue(team, t -> t.getScore(start, end));
+  }
+
   public void sortPlayers() {
-    sortByValue(player);
+    sortByValue(player, Player::getScore);
+  }
+
+   public void sortPlayers(int start, int end) {
+    sortByValue(player, p -> p.getScore(start, end));
   }
 }
 

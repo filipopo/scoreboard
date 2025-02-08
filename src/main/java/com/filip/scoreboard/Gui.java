@@ -103,25 +103,14 @@ class Gui extends JFrame {
   private int lastRound = 0;
   private String title = "Scoreboard, round ";
 
-  private void goToLastRound(DefaultTableModel tableModel, JLabel titleLabel) {
-    round = lastRound;
-    titleLabel.setText(title + Integer.toString(round + 1));
-
-    for (int row = 0; row < tableModel.getRowCount(); row++) {
-      Player p = manager.getPlayer(playerId.get(row));
-      tableModel.setValueAt(p.getScore(round), row, Col.SCORE.getNum());
-      tableModel.setValueAt(p.getScore(), row, Col.TOTAL.getNum());
-    }
-  }
-
   // Panel to hold buttons
   private JPanel createButtonPanel(DefaultTableModel tableModel, JLabel titleLabel) {
     // Button to go back to the previous round
     JButton previousRoundButton = new JButton("Previous round");
     previousRoundButton.addActionListener(e -> {
       if (round > 0) {
+        titleLabel.setText(title + round);
         round--;
-        titleLabel.setText(title + Integer.toString(round + 1));
       } else
         return;
 
@@ -135,15 +124,13 @@ class Gui extends JFrame {
     // Button to sort by players
     JButton sortPlayersButton = new JButton("Sort by players");
     sortPlayersButton.addActionListener(e -> {
-      goToLastRound(tableModel, titleLabel);
-
       playerId.clear();
       tableModel.setRowCount(0);
-      manager.sortPlayers();
+      manager.sortPlayers(0, round);
 
       for (Player p : manager.getPlayer()) {
         tableModel.addRow(new Object[] {
-          p.getId(), p.getTeam().getId(), p.getScore(round), p.getScore()
+          p.getId(), p.getTeam().getId(), p.getScore(round), p.getScore(0, round)
         });
 
         playerId.add(p.getId());
@@ -208,16 +195,14 @@ class Gui extends JFrame {
     // Button to sort by teams
     JButton sortTeamsButton = new JButton("Sort by teams");
     sortTeamsButton.addActionListener(e -> {
-      goToLastRound(tableModel, titleLabel);
-
       playerId.clear();
       tableModel.setRowCount(0);
-      manager.sortTeams();
+      manager.sortTeams(0, round);
 
       for (Team t : manager.getTeam()) {
         for (Player p : t.getPlayer()) {
           tableModel.addRow(new Object[] {
-            p.getId(), t.getId(), p.getScore(round), p.getScore()
+            p.getId(), t.getId(), p.getScore(round), p.getScore(0, round)
           });
 
           playerId.add(p.getId());
@@ -229,7 +214,7 @@ class Gui extends JFrame {
     JButton nextRoundButton = new JButton("Next round");
     nextRoundButton.addActionListener(e -> {
       round++;
-      titleLabel.setText(title + Integer.toString(round + 1));
+      titleLabel.setText(title + (round + 1));
 
       for (int row = 0; row < tableModel.getRowCount(); row++) {
         Player p = manager.getPlayer(playerId.get(row));
@@ -246,7 +231,16 @@ class Gui extends JFrame {
 
     // Button to go to last round
     JButton lastRoundButton = new JButton("Last round");
-    lastRoundButton.addActionListener(e -> goToLastRound(tableModel, titleLabel));
+    lastRoundButton.addActionListener(e -> {
+      round = lastRound;
+      titleLabel.setText(title + (round + 1));
+
+      for (int row = 0; row < tableModel.getRowCount(); row++) {
+        Player p = manager.getPlayer(playerId.get(row));
+        tableModel.setValueAt(p.getScore(round), row, Col.SCORE.getNum());
+        tableModel.setValueAt(p.getScore(), row, Col.TOTAL.getNum());
+      }
+    });
 
     JPanel previousRoundPanel = new JPanel();
     previousRoundPanel.add(previousRoundButton);

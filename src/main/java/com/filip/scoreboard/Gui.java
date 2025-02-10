@@ -10,9 +10,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 class Gui extends JFrame {
-  public Gui(Synonyms s) {
-    this.s = s;
-
+  public Gui() {
     // Set the title of the JFrame
     setTitle(s.getGame());
     setSize(1280, 720);
@@ -35,10 +33,9 @@ class Gui extends JFrame {
     };
 
     JTable table = new JTable(tableModel);
-    setCustomCells(table, s);
+    setCustomCells(table);
 
     // Label for the title
-    title = String.format("%s, %s ", s.getGame(), s.getRound());
     JLabel titleLabel = new JLabel(title + "1", SwingConstants.CENTER);
     titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
     add(titleLabel, BorderLayout.NORTH);
@@ -85,7 +82,7 @@ class Gui extends JFrame {
     add(tableScrollPane, BorderLayout.CENTER);
 
     // Add button panel to the bottom
-    add(createButtonPanel(tableModel, titleLabel, s), BorderLayout.SOUTH);
+    add(createButtonPanel(tableModel, titleLabel), BorderLayout.SOUTH);
 
     // Add right-click context menu
     table.addMouseListener(new MouseAdapter() {
@@ -106,14 +103,14 @@ class Gui extends JFrame {
 
   private TeamManager manager = new TeamManager();
   private List<String> playerId = new ArrayList<>();
-  private Synonyms s;
+  private Synonyms s = Synonyms.instance();
 
   private int round = 0;
   private int lastRound = 0;
-  private String title;
+  private String title = String.format("%s, %s ", s.getGame(), s.getRound());
 
   // Panel to hold buttons
-  private JPanel createButtonPanel(DefaultTableModel tableModel, JLabel titleLabel, Synonyms s) {
+  private JPanel createButtonPanel(DefaultTableModel tableModel, JLabel titleLabel) {
     // Button to go back to the previous round
     JButton previousRoundButton = new JButton(String.format(s.getPrevious(), s.getRound()));
     previousRoundButton.addActionListener(e -> {
@@ -302,17 +299,17 @@ class Gui extends JFrame {
     popupMenu.show(table, e.getX(), e.getY());
   }
 
-  private void setCustomCells(JTable table, Synonyms s) {
+  private void setCustomCells(JTable table) {
     TableColumnModel colModel = table.getColumnModel();
 
     colModel.getColumn(Col.PLAYER.getNum()).setCellRenderer(new BoldCellRenderer());
 
     colModel.getColumn(Col.PLAYER.getNum()).setCellEditor(
-      new PlayerCellEditor(new JTextField(), playerId, s)
+      new PlayerCellEditor(new JTextField(), playerId)
     );
 
     colModel.getColumn(Col.SCORE.getNum()).setCellEditor(
-      new ScoreCellEditor(new JTextField(), s)
+      new ScoreCellEditor(new JTextField())
     );
   }
 }
@@ -329,14 +326,13 @@ class BoldCellRenderer extends DefaultTableCellRenderer {
 }
 
 class PlayerCellEditor extends DefaultCellEditor {
-  public PlayerCellEditor(JTextField textField, List<String> playerId, Synonyms s) {
+  public PlayerCellEditor(JTextField textField, List<String> playerId) {
     super(textField);
     this.playerId = playerId;
-    this.s = s;
   }
 
   private List<String> playerId;
-  private Synonyms s;
+  private Synonyms s = Synonyms.instance();
 
   @Override
   public boolean stopCellEditing() {
@@ -353,12 +349,11 @@ class PlayerCellEditor extends DefaultCellEditor {
 }
 
 class ScoreCellEditor extends DefaultCellEditor {
-  public ScoreCellEditor(JTextField textField, Synonyms s) {
+  public ScoreCellEditor(JTextField textField) {
     super(textField);
-    this.s = s;
   }
 
-  private Synonyms s;
+  private Synonyms s = Synonyms.instance();
 
   @Override
   public boolean stopCellEditing() {

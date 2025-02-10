@@ -4,21 +4,21 @@ import java.util.Scanner;
 import java.util.function.Supplier;
 
 class Cli {
-  public Cli(Synonyms s) {
+  public Cli() {
     System.out.println(s.getEnterTeam());
-    int n = validInt(s, s::getTeam);
+    int n = validInt(s::getTeam);
     TeamManager manager = new TeamManager();
 
     for(int i = 1; i <= n; i++) {
       print("\n%s %d:", s.getTeam(), i);
 
       System.out.println(s.getEnterPlayer());
-      int num = validInt(s, s::getPlayer);
+      int num = validInt(s::getPlayer);
 
       for (int j = 0; j < num; j++) {
         print(s.getPlayerScore(), manager.getPlayer().size() + 1);
         Player p = manager.addPlayer(Integer.toString(i));
-        p.addScore(validInt(s, s::getScore));
+        p.addScore(validInt(s::getScore));
       }
     }
 
@@ -48,11 +48,13 @@ class Cli {
     }
   }
 
+  private Synonyms s = Synonyms.instance();
+
   private void print(String s, Object... args) {
     System.out.println(String.format(s, args));
   }
 
-  private int validInt(Synonyms s, Supplier<String> fun) {
+  private int validInt(Supplier<String> fun) {
     Scanner input = new Scanner(System.in);
     while (!input.hasNextInt()) {
       print(s.getValidInt(), fun.get());

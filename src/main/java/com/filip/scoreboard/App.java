@@ -17,8 +17,8 @@ public class App {
     s.loadConf(path);
 
     if (cli)
-      new Cli(s);
+      new Cli();
     else
-      new Gui(s);
+      new Gui();
   }
 }

@@ -181,15 +181,8 @@ class Gui extends JFrame {
       String scoreStr = scoreField.getText();
 
       // Validate using our utility methods
-      if (!Validator.isValidName(name, playerId)) {
-        JOptionPane.showMessageDialog(this, String.format(s.getExists(), s.getPlayer()));
+      if (!Validator.isValidName(name, playerId, this) || !Validator.isValidScore(scoreStr, this))
         return;
-      }
-
-      if (!Validator.isValidScore(scoreStr)) {
-        JOptionPane.showMessageDialog(this, String.format(s.getValidInt(), s.getScore()));
-        return;
-      }
 
       int score = Integer.parseInt(scoreStr);
       manager.addPlayer(name, team).setScore(round, score);
@@ -332,15 +325,11 @@ class PlayerCellEditor extends DefaultCellEditor {
   }
 
   private List<String> playerId;
-  private Synonyms s = Synonyms.instance();
 
   @Override
   public boolean stopCellEditing() {
-    if (!Validator.isValidName((String)getCellEditorValue(), playerId)) {
-      String msg = String.format(s.getExists(), s.getPlayer());
-      JOptionPane.showMessageDialog(getComponent(), msg);
+    if (!Validator.isValidName((String)getCellEditorValue(), playerId, getComponent())) {
       cancelCellEditing();
-
       return false;
     }
 
@@ -353,15 +342,10 @@ class ScoreCellEditor extends DefaultCellEditor {
     super(textField);
   }
 
-  private Synonyms s = Synonyms.instance();
-
   @Override
   public boolean stopCellEditing() {
-    if (!Validator.isValidScore((String)getCellEditorValue())) {
-      String msg = String.format(s.getValidInt(), s.getScore());
-      JOptionPane.showMessageDialog(getComponent(), msg);
+    if (!Validator.isValidScore((String)getCellEditorValue(), getComponent())) {
       cancelCellEditing();
-
       return false;
     }
 
@@ -370,18 +354,24 @@ class ScoreCellEditor extends DefaultCellEditor {
 }
 
 class Validator {
+  private static Synonyms s = Synonyms.instance();
+
   // Validate that the player name isn't already in use.
-  public static boolean isValidName(String name, List<String> existingNames) {
-    if (existingNames.contains(name))
+  public static boolean isValidName(String name, List<String> existingNames, Component c) {
+    if (existingNames.contains(name)) {
+      JOptionPane.showMessageDialog(c, String.format(s.getExists(), s.getPlayer()));
       return false;
+    }
+
     return true;
   }
 
   // Validate that the score string can be parsed into an integer.
-  public static boolean isValidScore(String scoreStr) {
+  public static boolean isValidScore(String scoreStr, Component c) {
     try {
       Integer.parseInt(scoreStr);
     } catch (NumberFormatException e) {
+      JOptionPane.showMessageDialog(c, String.format(s.getValidInt(), s.getScore()));
       return false;
     }
 

@@ -20,14 +20,28 @@
     "zlato"
   ],
   "teamVictory": [
-    "Lavovi"
+    "Lavovi",
+    "Zajedno do pobede"
   ],
   "playerVictory": [
-    "Najjači opstaju"
+    "Najjači opstaju",
+    "Kralj nad kraljevima"
   ],
   "enterTeam": "%1$s koliko %2$s ima:",
   "enterPlayer": "%1$s koliko %2$s ima u ovom %3$s:",
-  "playerScore": "%1$s %2$s %3$d's %4$s:",
+  "playerScore": "%1$s %2$s %3$s's %4$s:",
   "victoryMsg": "%1$s, najbolja %2$s:",
-  "playerRank": "%1$s %2$s %3$s je %4$d"
+  "playerRank": "%1$s %2$s %3$s je %4$s",
+  "validInt": "Unesite broj za %s",
+  "game": "Igra",
+  "round": "runda",
+  "total": "ukupno %s",
+  "exists": "%s već postoji",
+  "previous": "prethodna %s",
+  "next": "sledeća %s",
+  "last": "poslednja %s",
+  "sortBy": "sortiraj po %s",
+  "add": "dodaj %s",
+  "edit": "izmeni",
+  "delete": "obriši"
 }

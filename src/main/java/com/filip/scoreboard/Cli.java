@@ -1,22 +1,24 @@
 package com.filip.scoreboard;
 
 import java.util.Scanner;
+import java.util.function.Supplier;
 
 class Cli {
   public Cli(Synonyms s) {
-    print(s.getEnterTeam(), s.getEnter(), s.getTeam());
-    int n = validInt();
+    System.out.println(s.getEnterTeam());
+    int n = validInt(s, s::getTeam);
     TeamManager manager = new TeamManager();
 
     for(int i = 1; i <= n; i++) {
       print("\n%s %d:", s.getTeam(), i);
 
-      print(s.getEnterPlayer(), s.getEnter(), s.getPlayer(), s.getTeam());
-      int num = validInt();
+      System.out.println(s.getEnterPlayer());
+      int num = validInt(s, s::getPlayer);
 
       for (int j = 0; j < num; j++) {
-        print(s.getPlayerScore(), s.getEnter(), s.getPlayer(), manager.getPlayer().size() + 1, s.getScore());
-        manager.addPlayer(Integer.toString(i)).addScore(validInt());
+        print(s.getPlayerScore(), manager.getPlayer().size() + 1);
+        Player p = manager.addPlayer(Integer.toString(i));
+        p.addScore(validInt(s, s::getScore));
       }
     }
 
@@ -29,7 +31,7 @@ class Cli {
       print("#%d - %s %s:", n, s.getTeam(), t.getId());
 
       for (Player p : t.getPlayer())
-        print(s.getPlayerRank(), s.getPlayer(), p.getId(), s.getScore(), p.getScore());
+        print(s.getPlayerRank(), p.getId(), p.getScore());
 
       print("--\n%d %s\n", t.getScore(), s.getScore());
       n++;
@@ -41,7 +43,7 @@ class Cli {
     n = 1;
     for (Player p : manager.getPlayer()) {
       System.out.printf("#%d - ", n);
-      print(s.getPlayerRank(), s.getPlayer(), p.getId(), s.getScore(), p.getScore());
+      print(s.getPlayerRank(), p.getId(), p.getScore());
       n++;
     }
   }
@@ -50,10 +52,10 @@ class Cli {
     System.out.println(String.format(s, args));
   }
 
-  private int validInt() {
+  private int validInt(Synonyms s, Supplier<String> fun) {
     Scanner input = new Scanner(System.in);
     while (!input.hasNextInt()) {
-      System.out.println("You need to enter a number");
+      print(s.getValidInt(), fun.get());
       input.next();
     }
 

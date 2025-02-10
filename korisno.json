@@ -3,31 +3,42 @@
     "Enter",
     "Put in",
     "Put out",
-    "Give me"
+    "Give me",
+    "Davai",
+    "Gurni",
+    "Svrši"
   ],
   "player": [
     "bro",
     "contestant",
-    "player"
+    "kursadžija",
+    "sperminator",
+    "pussy destroyer",
+    "brat moj"
   ],
   "team": [
     "team",
-    "gathering",
-    "merry band",
-    "player group"
+    "no homo brojob",
+    "gangbang",
+    "braća bez gaća",
+    "meat beater",
+    "sinner group"
   ],
   "score": [
-    "score",
-    "medals",
-    "stars"
+    "cumshot count",
+    "amount of spilled milk",
+    "dick juice",
+    "merilo svršotine",
+    "white stuff amount",
+    "pena od sapunjanje"
   ],
   "teamVictory": [
-    "Teamwork to survival",
-    "Together to victory"
+    "We cum in pairs",
+    "Massive overlaod"
   ],
   "playerVictory": [
-    "Strongman",
-    "The one"
+    "Iron balls",
+    "Strongman"
   ],
   "enterTeam": "%1$s how many %2$ss are there:",
   "enterPlayer": "%1$s how many %2$ss are there in this %3$s:",
@@ -35,7 +46,7 @@
   "victoryMsg": "%1$s, the best %2$ss:",
   "playerRank": "%1$s %2$s's %3$s is %4$s",
   "validInt": "Enter a number for %s",
-  "game": "Scoreboard",
+  "game": "Cum program",
   "round": "round",
   "total": "total %s",
   "exists": "%s already exists",

@@ -10,15 +10,22 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 class Gui extends JFrame {
-  public Gui(Synonyms synonyms) {
+  public Gui(Synonyms s) {
+    this.s = s;
+
     // Set the title of the JFrame
-    setTitle("Scoreboard");
+    setTitle(s.getGame());
     setSize(1280, 720);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
 
     // Table to display players and their scores
-    String[] colNames = {"Player", "Team", "Round score", "Total score"};
+    String[] colNames = {
+      s.getPlayer(),
+      s.getTeam(),
+      String.format("%s %s", s.getRound(), s.getScore()),
+      String.format(s.getTotal(), s.getScore())
+    };
 
     DefaultTableModel tableModel = new DefaultTableModel(colNames, 0) {
       @Override
@@ -28,9 +35,10 @@ class Gui extends JFrame {
     };
 
     JTable table = new JTable(tableModel);
-    setCustomCells(table);
+    setCustomCells(table, s);
 
     // Label for the title
+    title = String.format("%s, %s ", s.getGame(), s.getRound());
     JLabel titleLabel = new JLabel(title + "1", SwingConstants.CENTER);
     titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
     add(titleLabel, BorderLayout.NORTH);
@@ -77,7 +85,7 @@ class Gui extends JFrame {
     add(tableScrollPane, BorderLayout.CENTER);
 
     // Add button panel to the bottom
-    add(createButtonPanel(tableModel, titleLabel), BorderLayout.SOUTH);
+    add(createButtonPanel(tableModel, titleLabel, s), BorderLayout.SOUTH);
 
     // Add right-click context menu
     table.addMouseListener(new MouseAdapter() {
@@ -98,15 +106,16 @@ class Gui extends JFrame {
 
   private TeamManager manager = new TeamManager();
   private List<String> playerId = new ArrayList<>();
+  private Synonyms s;
 
   private int round = 0;
   private int lastRound = 0;
-  private String title = "Scoreboard, round ";
+  private String title;
 
   // Panel to hold buttons
-  private JPanel createButtonPanel(DefaultTableModel tableModel, JLabel titleLabel) {
+  private JPanel createButtonPanel(DefaultTableModel tableModel, JLabel titleLabel, Synonyms s) {
     // Button to go back to the previous round
-    JButton previousRoundButton = new JButton("Previous round");
+    JButton previousRoundButton = new JButton(String.format(s.getPrevious(), s.getRound()));
     previousRoundButton.addActionListener(e -> {
       if (round > 0) {
         titleLabel.setText(title + round);
@@ -122,7 +131,7 @@ class Gui extends JFrame {
     });
 
     // Button to sort by players
-    JButton sortPlayersButton = new JButton("Sort by players");
+    JButton sortPlayersButton = new JButton(String.format(s.getSortBy(), s.getPlayer()));
     sortPlayersButton.addActionListener(e -> {
       playerId.clear();
       tableModel.setRowCount(0);
@@ -138,22 +147,22 @@ class Gui extends JFrame {
     });
 
     // Button to add a player
-    JButton addPlayerButton = new JButton("Add a player");
+    JButton addPlayerButton = new JButton(String.format(s.getAdd(), s.getPlayer()));
     addPlayerButton.addActionListener(e -> {
       // Create a panel with a grid layout (2 columns: label and field)
       JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
 
       // Create and add the fields
       String name = Integer.toString(manager.getPlayer().size() + 1);
-      panel.add(new JLabel("Player Name:"));
+      panel.add(new JLabel(String.format("%s:", s.getPlayer())));
       JTextField nameField = new JTextField(name);
       panel.add(nameField);
 
-      panel.add(new JLabel("Team:"));
+      panel.add(new JLabel(String.format("%s:", s.getTeam())));
       JTextField teamField = new JTextField("1");
       panel.add(teamField);
 
-      panel.add(new JLabel("Score:"));
+      panel.add(new JLabel(String.format("%s:", s.getScore())));
       JTextField scoreField = new JTextField("0");
       panel.add(scoreField);
 
@@ -161,7 +170,7 @@ class Gui extends JFrame {
       int result = JOptionPane.showConfirmDialog(
         this,
         panel,
-        "Enter player details",
+        String.format("%s %s", s.getEnter(), s.getPlayer()),
         JOptionPane.OK_CANCEL_OPTION,
         JOptionPane.PLAIN_MESSAGE
       );
@@ -176,12 +185,12 @@ class Gui extends JFrame {
 
       // Validate using our utility methods
       if (!Validator.isValidName(name, playerId)) {
-        JOptionPane.showMessageDialog(this, "Player already exists");
+        JOptionPane.showMessageDialog(this, String.format(s.getExists(), s.getPlayer()));
         return;
       }
 
       if (!Validator.isValidScore(scoreStr)) {
-        JOptionPane.showMessageDialog(this, "Score must be a number");
+        JOptionPane.showMessageDialog(this, String.format(s.getValidInt(), s.getScore()));
         return;
       }
 
@@ -193,7 +202,7 @@ class Gui extends JFrame {
     });
 
     // Button to sort by teams
-    JButton sortTeamsButton = new JButton("Sort by teams");
+    JButton sortTeamsButton = new JButton(String.format(s.getSortBy(), s.getTeam()));
     sortTeamsButton.addActionListener(e -> {
       playerId.clear();
       tableModel.setRowCount(0);
@@ -211,7 +220,7 @@ class Gui extends JFrame {
     });
 
     // Button to start next round
-    JButton nextRoundButton = new JButton("Next round");
+    JButton nextRoundButton = new JButton(String.format(s.getNext(), s.getRound()));
     nextRoundButton.addActionListener(e -> {
       round++;
       titleLabel.setText(title + (round + 1));
@@ -230,7 +239,7 @@ class Gui extends JFrame {
     });
 
     // Button to go to last round
-    JButton lastRoundButton = new JButton("Last round");
+    JButton lastRoundButton = new JButton(String.format(s.getLast(), s.getRound()));
     lastRoundButton.addActionListener(e -> {
       round = lastRound;
       titleLabel.setText(title + (round + 1));
@@ -273,13 +282,13 @@ class Gui extends JFrame {
     // Select the row where the click happened
     table.setRowSelectionInterval(row, row);
 
-    JMenuItem editItem = new JMenuItem("Edit cell");
+    JMenuItem editItem = new JMenuItem(s.getEdit());
     editItem.addActionListener(event -> {
       table.editCellAt(row, col);
       table.getEditorComponent().requestFocusInWindow();
     });
 
-    JMenuItem deleteItem = new JMenuItem("Delete row");
+    JMenuItem deleteItem = new JMenuItem(s.getDelete());
     deleteItem.addActionListener(event -> {
       manager.removePlayer(playerId.get(row));
       ((DefaultTableModel)table.getModel()).removeRow(row);
@@ -293,17 +302,17 @@ class Gui extends JFrame {
     popupMenu.show(table, e.getX(), e.getY());
   }
 
-  private void setCustomCells(JTable table) {
+  private void setCustomCells(JTable table, Synonyms s) {
     TableColumnModel colModel = table.getColumnModel();
 
     colModel.getColumn(Col.PLAYER.getNum()).setCellRenderer(new BoldCellRenderer());
 
     colModel.getColumn(Col.PLAYER.getNum()).setCellEditor(
-      new PlayerCellEditor(new JTextField(), playerId)
+      new PlayerCellEditor(new JTextField(), playerId, s)
     );
 
     colModel.getColumn(Col.SCORE.getNum()).setCellEditor(
-      new ScoreCellEditor(new JTextField())
+      new ScoreCellEditor(new JTextField(), s)
     );
   }
 }
@@ -320,18 +329,22 @@ class BoldCellRenderer extends DefaultTableCellRenderer {
 }
 
 class PlayerCellEditor extends DefaultCellEditor {
-  private List<String> playerId;
-
-  public PlayerCellEditor(JTextField textField, List<String> playerId) {
+  public PlayerCellEditor(JTextField textField, List<String> playerId, Synonyms s) {
     super(textField);
     this.playerId = playerId;
+    this.s = s;
   }
+
+  private List<String> playerId;
+  private Synonyms s;
 
   @Override
   public boolean stopCellEditing() {
     if (!Validator.isValidName((String)getCellEditorValue(), playerId)) {
-      JOptionPane.showMessageDialog(getComponent(), "Player already exists");
+      String msg = String.format(s.getExists(), s.getPlayer());
+      JOptionPane.showMessageDialog(getComponent(), msg);
       cancelCellEditing();
+
       return false;
     }
 
@@ -340,15 +353,20 @@ class PlayerCellEditor extends DefaultCellEditor {
 }
 
 class ScoreCellEditor extends DefaultCellEditor {
-  public ScoreCellEditor(JTextField textField) {
+  public ScoreCellEditor(JTextField textField, Synonyms s) {
     super(textField);
+    this.s = s;
   }
+
+  private Synonyms s;
 
   @Override
   public boolean stopCellEditing() {
     if (!Validator.isValidScore((String)getCellEditorValue())) {
-      JOptionPane.showMessageDialog(getComponent(), "Score must be a number");
+      String msg = String.format(s.getValidInt(), s.getScore());
+      JOptionPane.showMessageDialog(getComponent(), msg);
       cancelCellEditing();
+
       return false;
     }
 

@@ -234,53 +234,113 @@ class Synonyms {
     playerVictory;
   
   public String getEnter() {
-    return random(this.enter);
+    return random(enter);
   }
 
   public String getPlayer() {
-    return random(this.player);
+    return random(player);
   }
 
   public String getTeam() {
-    return random(this.team);
+    return random(team);
   }
 
   public String getScore() {
-    return random(this.score);
+    return random(score);
   }
 
   public String getTeamVictory() {
-    return random(this.teamVictory);
+    return random(teamVictory);
   }
 
   public String getPlayerVictory() {
-    return random(this.playerVictory);
+    return random(playerVictory);
   }
 
   private String enterTeam,
     enterPlayer,
     playerScore,
     victoryMsg,
-    playerRank;
+    playerRank,
+    validInt,
+    game,
+    round,
+    total,
+    exists,
+    previous,
+    next,
+    last,
+    sortBy,
+    add,
+    edit,
+    delete;
 
   public String getEnterTeam() {
-    return this.enterTeam;
+    return String.format(enterTeam, getEnter(), getTeam());
   }
 
   public String getEnterPlayer() {
-    return this.enterPlayer;
+    return String.format(enterPlayer, getEnter(), getPlayer(), getTeam());
   }
 
   public String getPlayerScore() {
-    return this.playerScore;
+    return String.format(playerScore, getEnter(), getPlayer(), "%d", getScore());
   }
 
   public String getVictoryMsg() {
-    return this.victoryMsg;
+    return String.format(victoryMsg);
   }
 
   public String getPlayerRank() {
-    return this.playerRank;
+    return String.format(playerRank, getPlayer(), "%s", getScore(), "%d");
+  }
+
+  public String getValidInt() {
+    return validInt;
+  }
+
+  public String getGame() {
+    return game;
+  }
+
+  public String getRound() {
+    return round;
+  }
+
+  public String getTotal() {
+    return total;
+  }
+
+  public String getExists() {
+    return exists;
+  }
+
+  public String getPrevious() {
+    return previous;
+  }
+
+  public String getNext() {
+    return next;
+  }
+
+  public String getLast() {
+    return last;
+  }
+
+  public String getSortBy() {
+    return sortBy;
+  }
+
+  public String getAdd() {
+    return add;
+  }
+
+  public String getEdit() {
+    return edit;
+  }
+
+  public String getDelete() {
+    return delete;
   }
 
   public void loadConf(String path) {
@@ -292,20 +352,37 @@ class Synonyms {
       messages = objectMapper.readValue(file, Synonyms.class);
     } catch (IOException e) {
       Logger logger = Logger.getLogger(getClass().getName());
-      logger.severe("Couldn't read " + file);
+      logger.severe(String.format(
+        "Error when reading %s\n%s",
+        file,
+        e.getMessage()
+      ));
+
       System.exit(1);
     }
 
-    this.enter = messages.enter;
-    this.player = messages.player;
-    this.team = messages.team;
-    this.score = messages.score;
-    this.teamVictory = messages.teamVictory;
-    this.playerVictory = messages.playerVictory;
-    this.enterTeam = messages.enterTeam;
-    this.enterPlayer = messages.enterPlayer;
-    this.playerScore = messages.playerScore;
-    this.victoryMsg = messages.victoryMsg;
-    this.playerRank = messages.playerRank;
+    enter = messages.enter;
+    player = messages.player;
+    team = messages.team;
+    score = messages.score;
+    teamVictory = messages.teamVictory;
+    playerVictory = messages.playerVictory;
+    enterTeam = messages.enterTeam;
+    enterPlayer = messages.enterPlayer;
+    playerScore = messages.playerScore;
+    victoryMsg = messages.victoryMsg;
+    playerRank = messages.playerRank;
+    validInt = messages.validInt;
+    game = messages.game;
+    round = messages.round;
+    total = messages.total;
+    exists = messages.exists;
+    previous = messages.previous;
+    next = messages.next;
+    last = messages.last;
+    sortBy = messages.sortBy;
+    add = messages.add;
+    edit = messages.edit;
+    delete = messages.delete;
   }
 }

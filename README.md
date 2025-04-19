@@ -17,5 +17,6 @@ Then you can run the app, it has 2 optional command line arguments, the localiza
 java -cp target/scoreboard-1.0-SNAPSHOT.jar com.filip.scoreboard.App
 java -cp target/scoreboard-1.0-SNAPSHOT.jar com.filip.scoreboard.App en.json
 java -cp target/scoreboard-1.0-SNAPSHOT.jar com.filip.scoreboard.App en.json --cli
+java -jar target/scoreboard-1.0-SNAPSHOT.jar --cli en.json
 ```
 ![scoreboard](https://github.com/user-attachments/assets/68aec49b-90a7-4799-bffd-79c67db5ea23)

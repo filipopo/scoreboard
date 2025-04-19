@@ -1,4 +1,6 @@
-FROM maven:3-eclipse-temurin-21-alpine AS base
+ARG JAVA_VER=21
+
+FROM maven:3-eclipse-temurin-${JAVA_VER}-alpine AS base
 
 WORKDIR /opt
 
@@ -9,7 +11,7 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:${JAVA_VER}-jre-alpine
 
 WORKDIR /opt
 

@@ -6,7 +6,7 @@ You can run with Docker like this
 
 ```
 docker build -t scoreboard:latest .
-docker run -it scoreboard:latest
+docker run -it scoreboard:latest en.json
 ```
 
 To build locally with maven, run `mvn package` to create the jar file for this project

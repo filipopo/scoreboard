@@ -2,16 +2,16 @@ package com.filip.scoreboard;
 
 public class App {
   public static void main(String[] args) {
-    String path;
+    String path = "en.json";
     boolean cli = false;
 
-    if (args.length > 0) {
-      if (args.length > 1)
-        cli = args[1].equalsIgnoreCase("--cli");
-
-      path = args[0];
-    } else
-      path = "en.json";
+    for (String arg : args) {
+      if (arg.equalsIgnoreCase("--cli")) {
+        cli = true;
+      } else {
+        path = arg;
+      }
+    }
 
     Synonyms s = Synonyms.instance();
     s.loadConf(path);

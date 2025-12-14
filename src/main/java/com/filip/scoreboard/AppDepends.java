@@ -288,7 +288,7 @@ class Synonyms {
   }
 
   public String getVictoryMsg() {
-    return String.format(victoryMsg);
+    return victoryMsg;
   }
 
   public String getPlayerRank() {
